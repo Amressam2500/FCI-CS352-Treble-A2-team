@@ -12,5 +12,12 @@
 <p> Current implemented services "http://fci-swe-apps.appspot.com/rest/RegistrationService --- {requires: uname, email, password}" </p>
 <p> and "http://fci-swe-apps.appspot.com/rest/LoginService --- {requires: uname,  password}" </p>
 <p> you should implement sendFriendRequest service and addFriend service
+<form action="/social/sendrequest" method="post">
+  Email : <input type="email" name="email" /> <br>
+  Emai2 : <input type="email" name="email" /> <br>
+  <input type="submit" value="Add Friend">
+</form>
+<a href ="/social/login/">Logout</a>
+<a href ="/social/Accept/">Accept Friend</a>
 </body>
 </html>
