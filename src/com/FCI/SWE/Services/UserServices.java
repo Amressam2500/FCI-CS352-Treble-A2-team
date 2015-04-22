@@ -22,10 +22,16 @@ import javax.ws.rs.core.Response;
 
 import org.glassfish.jersey.server.mvc.Viewable;
 import org.json.simple.JSONObject;
+import org.json.simple.JSONArray;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
+import com.FCI.SWE.ServicesModels.Notifications;
+import com.FCI.SWE.ServicesModels.Post;
 import com.FCI.SWE.ServicesModels.UserEntity;
+import com.FCI.SWE.ServicesModels.conversation;
+import com.FCI.SWE.ServicesModels.friendlist;
+import com.FCI.SWE.ServicesModels.page;
 
 /**
  * This class contains REST services, also contains action function for web
@@ -96,6 +102,7 @@ public class UserServices {
 		}
 		return object.toString();
 
+		
 	}
 	@POST
 	@Path("/sendrequest")
@@ -109,29 +116,165 @@ public class UserServices {
                     }
            else
                  {
-                    object.put("Status", "Active");
+                    object.put("Status", "OK");
+                    friendlist list = new friendlist(email1, email2, "waiting");
+        			list.savefriendlist();
 	             }
          
                 return object.toString();
 	}
-	@POST
-	@Path("/Accept")
-	public String Accept(@FormParam("uname") String uname,
-			@FormParam("id") String id) {
-		JSONObject object = new JSONObject();
-	 
-                                      UserEntity request = UserEntity.getUser(uname, id);
-		if (true) {
-			object.put("Status", "OK");
+
+@POST
+@Path("/accept")
+public String accept(@FormParam("email") String email1,@FormParam("email2") String email2 ){
+
+JSONObject object = new JSONObject();
+
+ friendlist user= friendlist.getrequest(email2);
+
+ if (user == null ) {
+object.put("Status", "Failed");
+     }
+else
+  {
+     object.put("Status", "OK");
+     friendlist list = new friendlist(email1 , email2 , "accept");
+		list.savefriendlist();
+  }
+
+ return object.toString();
+}
+
+@POST
+@Path("/NotificationsService")
+public String NotificationsService(@FormParam("userid") String user_id)
+		throws InstantiationException, IllegalAccessException,
+		ClassNotFoundException {
+	JSONObject object = new JSONObject();
+	JSONArray array = new JSONArray();
+	ArrayList<Notifications> not = Notifications.Notifiy(user_id);
+
+	if (not.size() == 0) {
+		System.out.println("null");
+		object.put("Status", "Failed");
+		array.add(object);
+	} else {
+
+		for (int i = 0; i < not.size(); i++) {
+			// object.put("name", user.get(i));
+			JSONObject not1 = new JSONObject();
+			not1.put("Status", "OK");
+			not1.put("user_name", not.get(i).getUser_name());
+			not1.put("user_id", not.get(i).getUser_id());
+			not1.put("friend_name", not.get(i).getFriend_name());
+			not1.put("not_id", not.get(i).getNot_id());
+			not1.put("type", not.get(i).getType());
+			not1.put("note", not.get(i).getNote());
+			array.add(not1);
+
 		}
-                                else {
-                               object.put("Status", "Failed");
-                               
-                                  } 
-		return object.toString();
 
 	}
-	
+	System.out.println("size " + array.size());
+	return array.toJSONString();
+}
 
+
+@POST
+@Path("/CreatenewpageService")
+public String CreatenewPageService(@FormParam("owner") String owner,
+		@FormParam("name") String name,
+		@FormParam("cateagory") String cateagory)
+		{
+	JSONObject object = new JSONObject();
+
+	page P = new page();
+	if (P.newpage(owner,name, cateagory) != "done") {
+		object.put("Status", "Failed");
+	} else {
+		object.put("Status", "OK");
+	}
+	return object.toString();
 
 }
+
+
+@POST
+@Path("/CreatePostService")
+public String CreatePostService(@FormParam("user") String user_name,
+		@FormParam("UID") String user_ID,
+		@FormParam("feeling") String feeling,
+		@FormParam("content") String content, @FormParam("type") String type) {
+
+	System.out.print(user_name);
+	JSONObject object = new JSONObject();
+
+	Post P = new Post();
+	if (P.newpost(user_ID, user_name, feeling, content, type) != "post") {
+		object.put("Status", "Failed");
+	} else {
+		object.put("Status", "OK");
+	}
+	return object.toString();
+
+}
+
+
+
+
+@POST
+@Path("/massege")
+public String massege(@FormParam("email1") String email1,@FormParam("email2") String email2 ,@FormParam("massege") String massege ){
+
+	JSONObject object = new JSONObject();
+            UserEntity user1 = UserEntity.getUser(email1);
+            UserEntity user2 = UserEntity.getUser(email2);
+            if (user1 == null && user2 == null ) {
+	   object.put("Status", "Failed");
+                }
+       else
+             {
+                object.put("Status", "OK");
+               com.FCI.SWE.ServicesModels.massege list = new com.FCI.SWE.ServicesModels.massege(email1 , email2 , massege);
+    		   list.savemassege();
+             }
+     
+            return object.toString();
+}
+
+
+@POST
+@Path("/Group")
+public String Group(@FormParam("email") String email,@FormParam("nameconv") String nameconv ,@FormParam("massege") String massege ){
+
+	JSONObject object = new JSONObject();
+            conversation user = conversation.getconv(nameconv);
+  
+            if (user == null  ) {
+	   object.put("Status", "Failed");
+                }
+       else
+             {
+                object.put("Status", "OK");
+               com.FCI.SWE.ServicesModels.Group list = new com.FCI.SWE.ServicesModels.Group(email);
+    		   list.saveGroup();
+             }
+     
+            return object.toString();
+}
+
+@POST
+@Path("/addpeople")
+public String registrationService(@FormParam("nameconv") String nameconv,@FormParam("email") String email) {
+	conversation user = new conversation( nameconv,email);
+	user.saveconv();
+	JSONObject object = new JSONObject();
+	object.put("Status", "OK");
+	return object.toString();
+
+}
+
+}
+
+
+

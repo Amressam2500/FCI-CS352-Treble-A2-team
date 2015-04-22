@@ -27,6 +27,7 @@ import org.json.simple.parser.ParseException;
 
 import com.FCI.SWE.Models.User;
 import com.FCI.SWE.ServicesModels.UserEntity;
+import com.FCI.SWE.ServicesModels.friendlist;
 
 /**
  * This class contains REST services, also contains action function for web
@@ -98,7 +99,7 @@ public class UserController {
 	public String response(@FormParam("uname") String uname,
 			@FormParam("email") String email, @FormParam("password") String pass) {
 
-		String serviceUrl = "http://localhost:8888/rest/RegistrationService";
+		String serviceUrl = "http://socialnwfci2015.appspot.com/rest/RegistrationService";
 		String urlParameters = "uname=" + uname + "&email=" + email
 				+ "&password=" + pass;
 		String retJson = Connection.connect(serviceUrl, urlParameters, "POST",
@@ -143,7 +144,7 @@ public class UserController {
 		String urlParameters = "uname=" + uname + "&password=" + pass;
 
 		String retJson = Connection.connect(
-				"http://localhost:8888/rest/LoginService", urlParameters,
+				"http://socialnwfci2015.appspot.com/rest/LoginService", urlParameters,
 				"POST", "application/x-www-form-urlencoded;charset=UTF-8");
 
 		JSONParser parser = new JSONParser();
@@ -173,10 +174,10 @@ public class UserController {
 	@POST
 	@Path("/sendrequest")
 	@Produces("text/html")
-	public Response sendrequest(@FormParam("email") String email1,@FormParam("email2") String email2)
+	public String sendrequest(@FormParam("email") String email1,@FormParam("email2") String email2)
 	{
-		String serviceUrl = "http://localhost:8888/rest/sendrequest";
-		String urlParameters = "email=" + email1 + "&email2"+email2 ;
+		String serviceUrl = "http://socialnwfci2015.appspot.com/rest/sendrequest";
+		String urlParameters = "email=" + email1 + "&email2="+email2 ;
 		String retJson = Connection.connect(
 				serviceUrl, urlParameters,
 				"POST", "application/x-www-form-urlencoded;charset=UTF-8");
@@ -185,12 +186,9 @@ public class UserController {
 		try {
 			obj = parser.parse(retJson);
 			JSONObject object = (JSONObject) obj;
-			if (object.get("Status").equals("Active")){
-			/*Map<String, String> map = new HashMap<String, String>();
-			User user = User.getUser(object.toJSONString());
-			map.put("email", user.getEmail());
-			map.put("email2", user.getEmail());
-			return Response.ok(new Viewable("/jsp/sendrequest", map)).build();*/
+			if (object.get("Status").equals("OK")){
+				return "Request sent Successfully";
+
 			}
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block
@@ -200,41 +198,215 @@ public class UserController {
 
 		
 	}
-	
-
 	@POST
-	@Path("/Accept")
+	@Path("/searchUser")
 	@Produces("text/html")
-	public Response Accept(@FormParam("uname") String uname ,
-			@FormParam("&id") String id) {
-		String urlParameters = "uname=" + uname + "&id=" + id ;
-
+	public Response searchUser(@FormParam("email")String email1) throws ParseException
+	{
+		UserEntity user=UserEntity.searchUser(email1);
+		if(user.searchUser(email1)==null)
+		{
+			return null;
+		}
+		return Response.ok(new Viewable("/jsp/search" , user)).build();
+	}
+	
+	@POST
+	@Path("/accept")
+	@Produces("text/html")
+	public String accept(@FormParam("email2") String email2)
+	{
+		String serviceUrl = "http://localhost:8888/rest/accept";
+		String urlParameters = "email2="+email2 ;
 		String retJson = Connection.connect(
-				"http://localhost:8888/rest/Accept", urlParameters,
+				serviceUrl, urlParameters,
 				"POST", "application/x-www-form-urlencoded;charset=UTF-8");
-
 		JSONParser parser = new JSONParser();
 		Object obj;
 		try {
 			obj = parser.parse(retJson);
 			JSONObject object = (JSONObject) obj;
-
-			if (object.get("Status").equals("Failed"))
-				return null;
-			Map<String, String> map = new HashMap<String, String>();
 			
-                                                         User request= User.getUser(object.toJSONString());
+         if (object.get("Status").equals("OK")){
+				return "Accept is done succefully";
 
-			map.put("uname", request.getName());
-			map.put("mail", request.getEmail());
+			}
+          else{
+          object.get("Status").equals("Failed");
+				return "no requests";
 
-			return Response.ok(new Viewable("/jsp/Accept", map)).build();
-		} catch (ParseException e) {
+
+           }
+
+		} 
+                                      catch (ParseException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		return null;
 
+		
+	}
+	@POST
+	@Path("/newpage")
+	@Produces("text/html")
+	public Response newpage(@FormParam("owner") String owner,@FormParam("name") String name,
+			@FormParam("cateagory") String cateagory)
+	{
+		  String serviceUrl = "http://socialnwfci2015.appspot.com/rest/CreatenewpageService";
+		  String urlParameters = "owner=" + owner + "&name="+name + "cateagory="+cateagory ;
+		  String retJson = Connection.connect(
+				serviceUrl, urlParameters,
+				"POST", "application/x-www-form-urlencoded;charset=UTF-8");
+	         	JSONParser parser = new JSONParser();
+	         	Object obj;
+	    		try {
+	    			obj = parser.parse(retJson);
+	    			JSONObject object = (JSONObject) obj;
+	    			if (object.get("Status").equals("OK"))
+	    			return Response.ok(new Viewable("/jsp/page")).build();
+	    			} catch (ParseException e)
+	    			  {
+	    				// TODO Auto-generated catch block
+	    				e.printStackTrace();
+	    			  }
+				return null;
+	    		
+	    		}
+	@POST
+	@Path("/newpost")
+	@Produces("text/html")
+	public Response newpage(@FormParam("user") String user_name, @FormParam("UID") String user_ID, @FormParam("feeling") String feeling,
+			@FormParam("content") String content, @FormParam("type") String type)
+	{
+		  String serviceUrl = "http://socialnwfci2015.appspot.com/rest/CreatePostService";
+		  String urlParameters = "user=" + user_name + "UID="+user_ID + "feeling="+feeling +"content="+content +"type="+type ;
+		  String retJson = Connection.connect(
+				serviceUrl, urlParameters,
+				"POST", "application/x-www-form-urlencoded;charset=UTF-8");
+	         	JSONParser parser = new JSONParser();
+	         	Object obj;
+	    		try {
+	    			obj = parser.parse(retJson);
+	    			JSONObject object = (JSONObject) obj;
+	    			if (object.get("Status").equals("OK"))
+	    			return Response.ok(new Viewable("/jsp/post")).build();
+	    			} catch (ParseException e)
+	    			  {
+	    				// TODO Auto-generated catch block
+	    				e.printStackTrace();
+	    			  }
+				return null;
+	}
+	@POST
+	@Path("/notify")
+	@Produces("text/html")
+	public Response newpage(@FormParam("UserID") String UserID)
+	{
+		  String serviceUrl = "http://socialnwfci2015.appspot.com/rest/NotificationsService";
+		  String urlParameters = "UserIDr=" + UserID  ;
+		  String retJson = Connection.connect(
+				serviceUrl, urlParameters,
+				"POST", "application/x-www-form-urlencoded;charset=UTF-8");
+	         	JSONParser parser = new JSONParser();
+	         	Object obj;
+	    		try {
+	    			obj = parser.parse(retJson);
+	    			JSONObject object = (JSONObject) obj;
+	    			if (object.get("Status").equals("OK"))
+	    			return Response.ok(new Viewable("/jsp/notify")).build();
+	    			} catch (ParseException e)
+	    			  {
+	    				// TODO Auto-generated catch block
+	    				e.printStackTrace();
+	    			  }
+				return null;
+	    		
+	    		}
+	
+	@POST
+	@Path("/massege")
+	@Produces("text/html")
+	public String massege(@FormParam("email1") String email1,@FormParam("email2") String email2,@FormParam("massege") String massege)
+	{
+		String serviceUrl = "http://socialnwfci2015.appspot.com/rest/sendrequest";
+		String urlParameters = "email1=" + email1 + "&email2="+email2 +"&massege="+massege;
+		String retJson = Connection.connect(
+				serviceUrl, urlParameters,
+				"POST", "application/x-www-form-urlencoded;charset=UTF-8");
+		JSONParser parser = new JSONParser();
+		Object obj;
+		try {
+			obj = parser.parse(retJson);
+			JSONObject object = (JSONObject) obj;
+			if (object.get("Status").equals("OK")){
+				return "Massege sent Successfully";
+
+			}
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		return null;
 
 	}
+	
+	@POST
+	@Path("/Group")
+	@Produces("text/html")
+	public String Group(@FormParam("email") String email,@FormParam("nameconv") String nameconv,@FormParam("massege") String massege)
+	{
+		String serviceUrl = "http://socialnwfci2015.appspot.com/rest/sendrequest";
+		String urlParameters = "email=" + email + "&nameconv="+nameconv +"&massege="+massege;
+		String retJson = Connection.connect(
+				serviceUrl, urlParameters,
+				"POST", "application/x-www-form-urlencoded;charset=UTF-8");
+		JSONParser parser = new JSONParser();
+		Object obj;
+		try {
+			obj = parser.parse(retJson);
+			JSONObject object = (JSONObject) obj;
+			if (object.get("Status").equals("OK")){
+				return "Massege sent Successfully";
 
+			}
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+
+	}
+	
+	@POST
+	@Path("/addpepole")
+	@Produces(MediaType.TEXT_PLAIN)
+	public String response(@FormParam("nameconv") String nameconv,@FormParam("email") String email) {
+
+		String serviceUrl = "http://socialnwfci2015.appspot.com/rest/RegistrationService";
+		String urlParameters = "nameconv=" + nameconv + "&email=" + email;
+		String retJson = Connection.connect(serviceUrl, urlParameters, "POST",
+				"application/x-www-form-urlencoded;charset=UTF-8");
+		JSONParser parser = new JSONParser();
+		Object obj;
+		try {
+			// System.out.println(retJson);
+			obj = parser.parse(retJson);
+			JSONObject object = (JSONObject) obj;
+			if (object.get("Status").equals("OK"))
+				return "Registered Successfully";
+
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		/*
+		 * UserEntity user = new UserEntity(uname, email, pass);
+		 * user.saveUser(); return uname;
+		 */
+		return "Failed";
+	}
+	
+	
 }

@@ -129,7 +129,7 @@ public class UserEntity {
 		PreparedQuery pq = datastore.prepare(gaeQuery);
 		for (Entity entity : pq.asIterable()) {
 			if (entity.getProperty("email").toString().equals(email)) {
-				UserEntity returnedUser = new UserEntity(entity.getProperty("email").toString(), entity.getProperty("email")
+				UserEntity returnedUser = new UserEntity(entity.getProperty("name").toString(), entity.getProperty("email")
 						.toString(), entity.getProperty("password").toString());
 				returnedUser.setId(entity.getKey().getId());	
 				return returnedUser;
@@ -138,23 +138,26 @@ public class UserEntity {
 		
         return null;
 	}
-	public  Boolean  AllRequests() {
+
+	public static UserEntity searchUser(String email)
+	{
 		DatastoreService datastore = DatastoreServiceFactory
 				.getDatastoreService();
-		Query gaeQuery = new Query("request");
-		PreparedQuery pq = datastore.prepare(gaeQuery);
-
-		List<Entity> list = pq.asList(FetchOptions.Builder.withDefaults());
-
-		Entity ListRequest = new Entity("request", list.size() + 1);
-
-		ListRequest .setProperty("name", this.name);
-                                      ListRequest .setProperty("email", this.email);
-		ListRequest .setProperty("id", this.id);
 		
-		datastore.put(ListRequest );
+		Query gaeQuery = new Query("users");
+		PreparedQuery pq = datastore.prepare(gaeQuery);
+		for (Entity entity : pq.asIterable()) {
+			System.out.println(entity.getProperty("name").toString());
+			if (entity.getProperty("email").toString().equals(email)) {
+				UserEntity returnedUser = new UserEntity(entity.getProperty(
+						"name").toString(), entity.getProperty("email")
+						.toString(),null);
+				return returnedUser;
+			}
+		}
 
-		return true;
+		return null;
 	}
+
 	
 }
