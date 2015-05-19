@@ -3,6 +3,10 @@
   <test name="Test">
     <classes>
       <class name="Testing.NewTest"/>
+      <class name="Testing.friendlisttest"/>
+      <class name="Testing.servicestest"/>
+      <class name="Testing.Controllertest"/>
+      
     </classes>
   </test> <!-- Test -->
 </suite> <!-- Suite -->

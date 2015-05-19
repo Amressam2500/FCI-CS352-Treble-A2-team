@@ -104,6 +104,16 @@ public class UserServices {
 
 		
 	}
+	/**
+	 * send request service, this service will be called to make
+	 * send request. This function will send request to another user
+	 * 
+	 * @param email1
+	 *            provided user1 email
+	 * @param email2
+	 *            provided user2 email
+	 * @return Status json
+	 */
 	@POST
 	@Path("/sendrequest")
 	public String SendRequest(@FormParam("email") String email1,@FormParam("email2") String email2 ){
@@ -123,7 +133,16 @@ public class UserServices {
          
                 return object.toString();
 	}
-
+	/**
+	 * accept request service, this service will be called to make
+	 * an accept request. This function will accept request from another user
+	 * 
+	 * @param email1
+	 *            provided user1 email
+	 * @param email2
+	 *            provided user2 email
+	 * @return Status json
+	 */
 @POST
 @Path("/accept")
 public String accept(@FormParam("email") String email1,@FormParam("email2") String email2 ){
@@ -144,7 +163,14 @@ else
 
  return object.toString();
 }
-
+/**
+ * notification service, this service will be called to make
+ * notify. This function will notify to user
+ * 
+ * @param user id
+ *            provided user id
+ * @return Status json
+ */
 @POST
 @Path("/NotificationsService")
 public String NotificationsService(@FormParam("userid") String user_id)
@@ -179,7 +205,18 @@ public String NotificationsService(@FormParam("userid") String user_id)
 	return array.toJSONString();
 }
 
-
+/**
+ * create new page service, this service will be called to create
+ * new page. This function will create page to  user
+ * 
+ * @param owner
+ *            provided user name
+ * @param name
+ *            provided page name
+ * @param category
+ *            provided page category
+ * @return Status json
+ */
 @POST
 @Path("/CreatenewpageService")
 public String CreatenewPageService(@FormParam("owner") String owner,
@@ -197,7 +234,22 @@ public String CreatenewPageService(@FormParam("owner") String owner,
 	return object.toString();
 
 }
-
+/**
+ * create new post service, this service will be called to create
+ * new post. This function will create post to  user
+ * 
+ * @param user
+ *            provided user name
+ * @param user_ID
+ *            provided user id
+ * @param feeling
+ *            provided user feeling
+ * @param content
+ *            provided post content
+ * @param type
+ *            provided post type                      
+ * @return Status json
+ */
 
 @POST
 @Path("/CreatePostService")
@@ -219,9 +271,18 @@ public String CreatePostService(@FormParam("user") String user_name,
 
 }
 
-
-
-
+/**
+ * create new message service, this service will be called to create
+ * new message. This function will create message from  user
+ * to another
+ * @param email1
+ *            provided user1 email
+ * @param email2
+ *            provided user2 email            
+ * @param message
+ *            provided message content                       
+ * @return Status json
+ */
 @POST
 @Path("/massege")
 public String massege(@FormParam("email1") String email1,@FormParam("email2") String email2 ,@FormParam("massege") String massege ){

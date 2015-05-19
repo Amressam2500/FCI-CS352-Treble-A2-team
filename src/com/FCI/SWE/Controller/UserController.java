@@ -171,6 +171,17 @@ public class UserController {
 		return null;
 
 	}
+	/**
+	 * Action function to Send request. This function will act as a
+	 * controller part, it will calls send request service to check user data and send friend request
+	 * to the other user
+	 * 
+	 * @param email1
+	 *            provided user1 email
+	 * @param email2
+	 *            provided user2 email
+	 * @return request sent successfully
+	 */
 	@POST
 	@Path("/sendrequest")
 	@Produces("text/html")
@@ -198,6 +209,15 @@ public class UserController {
 
 		
 	}
+	/**
+	 * Action function to search about user. This function will act as a
+	 * controller part, it will calls  search service to check user data and find user 
+	 * to the other user
+	 * 
+	 * @param email1
+	 *            provided user1 email
+	 * @return jsp search page
+	 */
 	@POST
 	@Path("/searchUser")
 	@Produces("text/html")
@@ -210,7 +230,15 @@ public class UserController {
 		}
 		return Response.ok(new Viewable("/jsp/search" , user)).build();
 	}
-	
+	/**
+	 * Action function to accept request. This function will act as a
+	 * controller part, it will calls accept service to check user data and accept friend request
+	 * to the other user
+	 * 
+	 * @param email2
+	 *            provided user2 email
+	 * @return Accept is done successfully
+	 */
 	@POST
 	@Path("/accept")
 	@Produces("text/html")
@@ -247,6 +275,19 @@ public class UserController {
 
 		
 	}
+	/**
+	 * Action function to Create new page. This function will act as a
+	 * controller part, it will calls create page service to check page data and create page
+	 * for the user
+	 * 
+	 * @param owner
+	 *            provided user name
+	 * @param name
+	 *            provided page name
+	 * @param category
+	 *            provided page category            
+	 * @return jsp page
+	 */
 	@POST
 	@Path("/newpage")
 	@Produces("text/html")
@@ -273,10 +314,28 @@ public class UserController {
 				return null;
 	    		
 	    		}
+	
+	/**
+	 * Action function to Create new post. This function will act as a
+	 * controller part, it will calls create post service to check page data and create page
+	 * for the user
+	 * 
+	 * @param user
+	 *            provided user name
+	 * @param uid
+	 *            provided user id
+	 * @param feeling
+	 *            provided user feeling
+	 * @param content
+	 *            provided post content
+	 * @param type
+	 *            provided post type                                     
+	 * @return jsp post
+	 */
 	@POST
 	@Path("/newpost")
 	@Produces("text/html")
-	public Response newpage(@FormParam("user") String user_name, @FormParam("UID") String user_ID, @FormParam("feeling") String feeling,
+	public Response newpost(@FormParam("user") String user_name, @FormParam("UID") String user_ID, @FormParam("feeling") String feeling,
 			@FormParam("content") String content, @FormParam("type") String type)
 	{
 		  String serviceUrl = "http://socialnwfci2015.appspot.com/rest/CreatePostService";
@@ -298,10 +357,20 @@ public class UserController {
 	    			  }
 				return null;
 	}
+	/**
+	 * Action function to notify. This function will act as a
+	 * controller part, it will calls notification service to check notification data and show notification
+	 * for the user
+	 * 
+	 
+	 * @param uid
+	 *            provided user id                                     
+	 * @return jsp notify
+	 */
 	@POST
 	@Path("/notify")
 	@Produces("text/html")
-	public Response newpage(@FormParam("UserID") String UserID)
+	public Response notify(@FormParam("UserID") String UserID)
 	{
 		  String serviceUrl = "http://socialnwfci2015.appspot.com/rest/NotificationsService";
 		  String urlParameters = "UserIDr=" + UserID  ;
@@ -323,6 +392,20 @@ public class UserController {
 				return null;
 	    		
 	    		}
+	/**
+	 * Action function to send message. This function will act as a
+	 * controller part, it will calls message service to send  data and communicate
+	 * with the other user
+	 * 
+	 
+	 * @param email1
+	 *            provided user1 email
+	 * @param email2
+	 *            provided user2 email            
+	 * @param message
+	 *            provided message content                                                 
+	 * @return Massege sent Successfully
+	 */
 	
 	@POST
 	@Path("/massege")

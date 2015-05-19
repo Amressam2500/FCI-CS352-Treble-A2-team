@@ -19,22 +19,22 @@ public class friendlist {
 		this.email2 = email2;
 		this.status=status;
 	}
-	private void setEmail1(String email){
+	public void setEmail1(String email){
 		this.email1 = email;
 	}
-	private void setEmail2(String email){
+	public void setEmail2(String email){
 		this.email2 = email;
 	}
-	private String getEmail1(){
+	public String getEmail1(){
 		return email1;
 	}
-	private String getEmail2(){
+	public String getEmail2(){
 		return email2;
 	}
-	private void setstatus(String status){
+	public void setstatus(String status){
 		this.status = status;
 	}
-	private String getstatus(){
+	public String getstatus(){
 		return status;
 	}
 	

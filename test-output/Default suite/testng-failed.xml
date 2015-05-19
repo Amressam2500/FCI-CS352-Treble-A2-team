@@ -3,13 +3,16 @@
 <suite name="Failed suite [Default suite]">
   <test name="Default test(failed)">
     <classes>
-      <class name="Testing.NewTest">
+      <class name="Testing.Controllertest">
         <methods>
+          <include name="sendrequesttest"/>
           <include name="setUp"/>
-          <include name="getusertest"/>
           <include name="tearDown"/>
+          <include name="notifytest"/>
+          <include name="creatposttest"/>
+          <include name="creatpagetest"/>
         </methods>
-      </class> <!-- Testing.NewTest -->
+      </class> <!-- Testing.Controllertest -->
     </classes>
   </test> <!-- Default test(failed) -->
 </suite> <!-- Failed suite [Default suite] -->

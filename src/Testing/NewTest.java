@@ -39,17 +39,25 @@ public class NewTest {
 			}
 	
 	
-	@Test
+@Test
   public void getusertest() {
 	  UserEntity c = new UserEntity("a", "a@yahoo.com", "1");
-	 c.getUser("a@yahoo.com");
-	  Assert.assertEquals( c.getUser("a@yahoo.com"),"a@yahoo.com");
+	  c.setEmail("a@yahoo.com");
+	 String X=c.getEmail();
+	  Assert.assertEquals(c.getUser("a@yahoo.com"),X);
   }
   @Test
   public void saveusertest() {
 	  UserEntity c = new UserEntity("a", "a@yahoo.com", "1");
 	  boolean f=c.saveUser();
 	 Assert.assertEquals(f,true);    
+  }
+  
+  @Test
+  public void searchusertest() {
+	  UserEntity c = new UserEntity("a", "a@yahoo.com", "1");
+	  String X=c.getEmail();
+	 Assert.assertEquals(c.searchUser("a@yahoo.com"),X);    
   }
     
 }
